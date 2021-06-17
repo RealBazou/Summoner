@@ -103,6 +103,12 @@ namespace Summoner
             //
             skeleton.GuiPresentation.Title = "Summoner/&FancySkeletonTitle";
             skeleton.GuiPresentation.Description = "Summoner/&FancySkeletonDescription";
+
+            CubeOfRevelationsMonsterBuilder.AddToMonsterList();
+            SummonFeatBuilder.AddToFeatList();
+            //SummonPetSpellBuilder.AddToSpellList();
+            //SummonWolfPetSpellBuilder.AddToSpellList();
+
         }
 
         static void OnGUI(UnityModManager.ModEntry modEntry)
@@ -113,7 +119,35 @@ namespace Summoner
             UI.Section("Summoner", () =>
             {
                 UI.HStack("Sample Stack A", 4,
-                    () => { UI.ActionButton("Button 1", () => { /* do something here */ }); },
+                    () => { UI.ActionButton("AdjustAllegiances", () => {
+
+                            var party = ServiceRepository.GetService<IGameLocationCharacterService>()?.PartyCharacters;
+                            var validEntities = ServiceRepository.GetService<IGameLocationCharacterService>()?.AllValidEntities;
+                            var playerContenders = ServiceRepository.GetService<IGameLocationBattleService>()?.Battle.PlayerContenders;
+                            var enemyContenders = ServiceRepository.GetService<IGameLocationBattleService>()?.Battle.EnemyContenders;
+
+                            for (var index = 0; index < validEntities.Count; index++)
+                            {
+                                if (validEntities[index].Name == "Monster/&PetTitle")
+                                {
+                                    if (!party.Contains(validEntities[index]))
+                                        party.Add(validEntities[index]);
+
+                                    if (!playerContenders.Contains(validEntities[index]))
+                                        playerContenders.Add(validEntities[index]);
+
+                                    if (enemyContenders.Contains(validEntities[index]))
+                                        enemyContenders.Remove(validEntities[index]);
+
+                                    validEntities[index].ControllerId = 0;
+                                    validEntities[index].ChangeSide(RuleDefinitions.Side.Ally);
+                                }
+
+                            }
+
+                            ServiceRepository.GetService<IGameLocationCharacterService>()?.RefreshAllCharacters();
+
+                    }); },
                     () => { UI.ActionButton("Button 2", () => { /* do something here */ }); }
                  );
                 UI.Space(10);
