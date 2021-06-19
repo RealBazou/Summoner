@@ -12,6 +12,7 @@ namespace Summoner
         {
             Definition.GuiPresentation.Title = "Spell/&ViciousMockeryTitle";
             Definition.GuiPresentation.Description = "Spell/&ViciousMockeryDescription";
+            Definition.GuiPresentation.SetSpriteReference(DatabaseHelper.SpellDefinitions.HideousLaughter.GuiPresentation.SpriteReference);
 
             Definition.SetSchoolOfMagic("SchoolEnchantment");
             Definition.SetVerboseComponent(true);
@@ -21,6 +22,8 @@ namespace Summoner
             EffectDescription effectDescription = Definition.EffectDescription;
             effectDescription.DurationType = RuleDefinitions.DurationType.Round;
             effectDescription.SetRangeParameter(12);
+            effectDescription.EffectParticleParameters.Clear();
+            effectDescription.SetEffectParticleParameters(DatabaseHelper.SpellDefinitions.HideousLaughter.EffectDescription.EffectParticleParameters);
 
             EffectForm mainEffectForm = effectDescription.EffectForms[0];
             mainEffectForm.DamageForm.DieType = RuleDefinitions.DieType.D4;
