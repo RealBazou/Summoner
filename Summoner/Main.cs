@@ -87,27 +87,11 @@ namespace Summoner
 
         internal static void ModEntryPoint()
         {
-            // example: use the ModApi to get a skeleton blueprint
-            //
-            var skeleton = DatabaseHelper.MonsterDefinitions.Skeleton;
-
-            // example: how to add TEXTS to the game right
-            //
-            // . almost every game blueprint has a GuiPresentation attribute
-            // . GuiPresentation has a Title and a Description
-            // . Create an entry in Translations-en.txt for those (tab separated)
-            // . Refer to those entries when assigning values to these attributes
-            //
-            // . DON'T FORGET TO CLEAN UP THIS EXAMPLE AND Translations-en.txt file
-            // . ugly things will happen if you don't
-            //
-            skeleton.GuiPresentation.Title = "Summoner/&FancySkeletonTitle";
-            skeleton.GuiPresentation.Description = "Summoner/&FancySkeletonDescription";
-
-            CubeOfRevelationsMonsterBuilder.AddToMonsterList();
+            //CubeOfRevelationsMonsterBuilder.AddToMonsterList();
             SummonFeatBuilder.AddToFeatList();
             //SummonPetSpellBuilder.AddToSpellList();
             //SummonWolfPetSpellBuilder.AddToSpellList();
+            ViciousMockerySpellBuilder.AddToSpellList();
 
         }
 
@@ -122,6 +106,7 @@ namespace Summoner
                     () => { UI.ActionButton("AdjustAllegiances", () => {
 
                             var party = ServiceRepository.GetService<IGameLocationCharacterService>()?.PartyCharacters;
+                            var guests = ServiceRepository.GetService<IGameLocationCharacterService>()?.GuestCharacters;
                             var validEntities = ServiceRepository.GetService<IGameLocationCharacterService>()?.AllValidEntities;
                             var playerContenders = ServiceRepository.GetService<IGameLocationBattleService>()?.Battle.PlayerContenders;
                             var enemyContenders = ServiceRepository.GetService<IGameLocationBattleService>()?.Battle.EnemyContenders;
@@ -130,8 +115,8 @@ namespace Summoner
                             {
                                 if (validEntities[index].Name == "Monster/&PetTitle")
                                 {
-                                    if (!party.Contains(validEntities[index]))
-                                        party.Add(validEntities[index]);
+                                    if (!guests.Contains(validEntities[index]))
+                                        guests.Add(validEntities[index]);
 
                                     if (!playerContenders.Contains(validEntities[index]))
                                         playerContenders.Add(validEntities[index]);
@@ -141,7 +126,9 @@ namespace Summoner
 
                                     validEntities[index].ControllerId = 0;
                                     validEntities[index].ChangeSide(RuleDefinitions.Side.Ally);
-                                }
+//                                    RulesetCharacterHero rulesetCharacterHero = new RulesetCharacterHero();
+//                                    validEntities[index].SetRuleset(rulesetCharacterHero);
+                            }
 
                             }
 
