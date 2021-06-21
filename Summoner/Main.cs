@@ -91,7 +91,6 @@ namespace Summoner
             SummonFeatBuilder.AddToFeatList();
             //SummonPetSpellBuilder.AddToSpellList();
             //SummonWolfPetSpellBuilder.AddToSpellList();
-            ViciousMockerySpellBuilder.AddToSpellList();
 
         }
 
